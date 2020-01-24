@@ -1,0 +1,335 @@
+* {
+    box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+    width: 0;
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background: #e74c3c url(./img/winterforest.png) repeat-x bottom center;
+}
+
+.hidden {
+    display: none;
+}
+
+#app {
+    height: 100%;
+    width: 100%;
+}
+
+.step1,
+.step2 {
+    width: 90%;
+    max-width: 450px;
+    margin: 0 auto;
+	padding:30px 0 0;
+}
+
+.step1 .title img {
+    display: block;
+    margin-bottom: 10px;
+    width: 200px;
+}
+
+.chat-wrapper {
+    background: #ffffff;
+    padding: 15px;
+    max-height: 600px;
+    overflow-y: auto;
+	overflow-x:hidden;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+}
+
+.chat-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.chat-wrapper .chat-item .chat-avatar {
+    margin-right: 5px;
+    flex-shrink: 0;
+}
+
+.chat-wrapper .chat-item .chat-bubble {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: flex-start;
+}
+
+.chat-wrapper .chat-item .chat-bubble .left {
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-right: 5px solid rgb(253, 197, 109);
+    position: relative;
+    top: 15px;
+}
+
+.chat-wrapper .chat-item .chat-bubble .text {
+    min-height: 40px;
+    line-height: 30px;
+    background: rgb(253, 197, 109);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 10px;
+    max-width: 360px;
+    text-align: justify;
+	word-break: break-all;
+}
+
+.chat-wrapper .chat-item .chat-bubble .text>div{
+	display:inline-block;
+}
+
+.chat-wrapper .chat-item .chat-avatar img {
+    width: 50px;
+    height: 50px;
+}
+
+.chat-wrapper .chat-item .chat-bubble .text img{
+	width: 18px;
+    height: 18px;
+	display:inline-block;
+}
+
+.step1 .play,
+.step2 .confirm,
+.step2 .next,
+.step2 .restart,
+.step2 .win,
+.step2 .blank {
+    cursor: pointer;
+    padding: 10px;
+    width: 100%;
+    height: 40px;
+    line-height: 20px;
+    background-color: green;
+    color: #ffffff;
+    border-radius: 5px;
+    text-align: center;
+    margin: 15px auto 0;
+}
+
+.step2 .blank{
+	background-color: transparent;
+}
+
+.step1 .play:hover,
+.step2 .confirm:hover,
+.step2 .next:hover,
+.step2 .restart:hover,
+.step2 .win:hover {
+    background-color: #0c8918;
+}
+
+.step2 > div{
+	padding:10px;
+	background:rgb(253, 197, 109);
+}
+
+.step2 .title {
+    text-align: center;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.step2 .choose-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.step2 .choose-list .choose-item {
+    width: 33.33%;
+    height: auto;
+    padding: 30px 5px;
+    text-align: center;
+}
+
+.step2 .choose-list .choose-item>div {
+    border: 5px solid #ffffff;
+    height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.step2 .choose-list .choose-item>div.choose {
+    background-color: #ffffff !important;
+}
+
+.step2 .choose-list .choose-item>div.choose>img:nth-child(1) {
+    display: none !important;
+}
+
+.step2 .choose-list .choose-item>div.choose>img:nth-child(2) {
+    display: block !important;
+}
+
+.step2 .game-playground {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.step2 .game-result>div {
+    text-align: center;
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+    height: 24px;
+    line-height: 24px;
+	margin-top:5px;
+}
+
+.step2 .game-playground .self,
+.step2 .game-playground .vs,
+.step2 .game-playground .santa {
+    text-align: center;
+    width: 33.33%;
+    padding: 15px 5px;
+}
+
+.step2 .game-playground .vs {
+    color: #ffffff;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.step2 .game-playground .self-title,
+.step2 .game-playground .santa-title {
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.step2 .game-playground .choose-box {
+    border: 5px solid #ffffff;
+    height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.step2 .game-playground.result .choose-box {
+    background: #ffffff;
+}
+
+.step3 {
+    padding-top: 200px;
+    height: 100%;
+}
+
+.step3>div {
+    display: flex;
+    justify-content: center;
+}
+
+.step3 .showgift {
+    text-align: center;
+    margin-bottom: 50px;
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.step3 .gift-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 95%;
+    max-width: 550px;
+    margin: 0 auto;
+}
+
+.step3 .gift-wrapper .gift-item {
+    width: 33.33%;
+    padding: 10px 30px;
+}
+
+.step3 .gift-wrapper .gift-item div {
+    cursor: pointer;
+}
+
+.step3 .gift-wrapper .gift-item div img {
+    display: block;
+}
+
+.mask {
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, .7);
+    z-index: 999;
+    position: fixed;
+    top: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.mask img {
+    display: block;
+}
+
+.mask div {
+    margin-top: 20px;
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+}
+
+
+@media (max-width: 480px) {
+	.chat-wrapper{
+		max-height:350px;
+	}
+	
+	.chat-wrapper .chat-item .chat-bubble .text{
+		font-size:14px;
+	}
+	
+	.chat-wrapper .chat-item .chat-bubble .text img{
+		width:16px;
+		height:16px;
+	}
+	
+    .step2 .choose-list .choose-item>div {
+        height: 100px;
+        border: 2px solid #ffffff;
+    }
+
+    .step2 .game-playground .choose-box {
+        height: 100px;
+        border: 2px solid #ffffff;
+    }
+
+    .step3 .gift-wrapper .gift-item {
+        padding: 10px 15px;
+    }
+
+}

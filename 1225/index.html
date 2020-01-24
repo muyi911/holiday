@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="./assets/img/heart.png">
+    <link href="https://cdn.bootcss.com/minireset.css/0.0.2/minireset.min.css" rel="stylesheet">
+    <link href="./assets/index.css" rel="stylesheet">
+	<link href="./assets/font_1575613_i476novtuco.css" rel="stylesheet">
+    <title>匿名信</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/typeit@v6/dist/typeit.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="step1 hidden">
+            <div class="title">
+                <img src="./assets/img/title.png">
+            </div>
+            <div class="chat-wrapper"></div>
+            <div class="play hidden" @click="play">开始游戏</div>
+        </div>
+        <div class="step2 hidden">
+			<div>
+				<div class="title">请选择</div>
+				<div class="choose-list">
+					<div class="choose-item">
+						<div data-index=1>
+							<img src="./assets/img/white_jiandao.svg" alt="">
+							<img class="hidden" src="./assets/img/red_jiandao.svg" alt="">
+						</div>
+					</div>
+					<div class="choose-item">
+						<div data-index=2>
+							<img src="./assets/img/white_shitou.svg" alt="">
+							<img class="hidden" src="./assets/img/red_shitou.svg" alt="">
+						</div>
+					</div>
+					<div class="choose-item">
+						<div data-index=3>
+							<img src="./assets/img/white_bu.svg" alt="">
+							<img class="hidden" src="./assets/img/red_bu.svg" alt="">
+						</div>
+					</div>
+				</div>
+				<div class="game-result">
+					<div class="game-result-title hidden">{{resultTitle}}</div>
+					<div class="score">{{selfScore}} : {{santaScore}}</div>
+				</div>
+				<div class="game-playground">
+					<div class="self">
+						<div class="self-title">我</div>
+						<div class="choose-box">
+							<img class="hidden" src="./assets/img/red_jiandao.svg" alt="">
+							<img class="hidden" src="./assets/img/red_shitou.svg" alt="">
+							<img class="hidden" src="./assets/img/red_bu.svg" alt="">
+						</div>
+					</div>
+					<div class="vs">VS</div>
+					<div class="santa">
+						<div class="santa-title">圣诞老人</div>
+						<div class="choose-box">
+							<img class="hidden" src="./assets/img/red_jiandao.svg" alt="">
+							<img class="hidden" src="./assets/img/red_shitou.svg" alt="">
+							<img class="hidden" src="./assets/img/red_bu.svg" alt="">
+						</div>
+					</div>
+				</div>
+				<div class="blank"></div>
+				<div class="next hidden" @click="next">下一回合</div>
+				<div class="confirm hidden" @click="confirm">确定</div>
+				<div class="restart hidden" @click="restart">重新开始</div>
+				<div class="win hidden" @click="win">领取礼物</div>
+			</div>
+        </div>
+        <div class="step3 hidden">
+            <div>
+                <div>
+                    <div class="showgift">点击打开</div>
+                    <div class="gift-wrapper">
+                        <div class="gift-item">
+                            <div @click="open(0,$event)">
+                                <img src="./assets/img/gift.svg" alt="">
+                            </div>
+                        </div>
+                        <div class="gift-item">
+                            <div @click="open(1,$event)">
+                                <img src="./assets/img/gift.svg" alt="">
+                            </div>
+                        </div>
+                        <div class="gift-item">
+                            <div @click="open(2,$event)">
+                                <img src="./assets/img/gift.svg" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mask" style="display: none;">
+            <img src="" alt="">
+            <div></div>
+        </div>
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                step: 1,
+                chat: [{
+                    text: '嚯嚯嚯，<div><img src="./assets/img/tree.svg"></div>圣诞节<div><img src="./assets/img/tree.svg"></div>快乐，我的老伙计！！！'
+                }, {
+                    text: '你应该看出来了，我是圣诞老人<img src="./assets/img/santa-icon.svg">'
+                }, {
+                    text: '有个“不愿透露姓名”的人托我给你带了点礼物~'
+                }, {
+                    text: '一件，噢不！两件……也许是三件'
+                }, {
+                    text: '噢，我的老天爷，我的记性真差<img src="./assets/img/ganga.svg">'
+                }, {
+                    text: '<img src="./assets/img/liwu.svg"> <img src="./assets/img/liwu.svg"> <img src="./assets/img/liwu.svg">'
+                }, {
+                    text: '礼物都在这了'
+                }, {
+                    text: '不过想从我这拿走礼物也不是那么容易的！'
+                }, {
+                    text: '你得和我玩个小游戏<img src="./assets/img/game.svg">，嚯嚯嚯'
+                }, {
+                    text: '赢了才可以拿走哦<img src="./assets/img/xiao.svg">'
+                }, {
+                    text: '点击“按钮”开始游戏，三局两胜'
+                }],
+                choose: -1,
+                santaChoose: -1,
+                count: 0,
+                playing: false,
+                round: 1,
+                santaScore: 0,
+                selfScore: 0,
+                resultTitle: '',
+                gifts: [{
+                    url: './assets/img/memeda.svg',
+                    text: 'o((⊙﹏⊙))o.<br>这个盒子是空的'
+                }, {
+                    url: './assets/img/youxiji.svg',
+                    text: '游戏机一台，可找男朋友兑换<br>（有效期：12.24~12.25）'
+                }, {
+                    url: './assets/img/fan.svg',
+                    text: '饭票一张，可找男朋友兑换<br>（有效期：12.24~12.25）'
+                }]
+            },
+            mounted() {
+                let self = this
+                this.changeStep(this.step)
+                if (this.step == 1) {
+                    this.autoChat(0)
+                }
+                $('.choose-item').hover(function () {
+                    $(this).find('div').css('background', '#ffffff')
+                    $(this).find('img:nth-child(1)').addClass('hidden')
+                    $(this).find('img:nth-child(2)').removeClass('hidden')
+                }, function () {
+                    $(this).find('div').css('background', 'transparent')
+                    $(this).find('img:nth-child(1)').removeClass('hidden')
+                    $(this).find('img:nth-child(2)').addClass('hidden')
+                })
+
+                $('.choose-item div').click(function () {
+                    if (self.playing) {
+                        return
+                    } else {
+                        $('.choose').removeClass('choose')
+                        $(this).addClass('choose')
+                        self.choose = $(this).attr('data-index')
+						$('.step2 .blank').addClass('hidden')
+                        $('.step2 .confirm').removeClass('hidden')
+                    }
+                })
+
+                $('.mask').click(function () {
+                    $(this).hide()
+                })
+            },
+            methods: {
+                autoChat(index) {
+                    var self = this
+                    $('.chat-wrapper').append(self.getChatItemTemplate(index))
+					var showContent = $(".chat-wrapper");
+					showContent[0].scrollTop = showContent[0].scrollHeight + "100";
+
+                    new TypeIt('#text-' + index, {
+                        strings: self.chat[index].text,
+                        speed: 80,
+                        cursorChar: '',
+                        waitUntilVisible: true,
+						html:true,
+						afterComplete: (instance) => {
+							if(index == self.chat.length - 1){
+								 $('.play').removeClass('hidden')
+								return
+							} else {
+								setTimeout(function () {
+									self.autoChat(index + 1)
+								}, 600)
+							}
+						}
+                    }).go();
+                },
+                getChatItemTemplate(index) {
+                    var template =
+                        '<div class="chat-item chat-item"><div class="chat-avatar"><img src="./assets/img/Santa.svg"></div><div class="chat-bubble"><div class="left"></div><div id="text-' +
+                        index + '" class="text text-' +
+                        index + '"></div></div></div>'
+                    return template
+                },
+                changeStep(step) {
+                    this.step = step
+                    $('.step1').addClass("hidden");
+                    $('.step2').addClass("hidden");
+                    $('.step3').addClass("hidden");
+                    $('.step' + step).removeClass("hidden");
+                },
+                play() {
+                    this.changeStep(2)
+                },
+                confirm() {
+                    if (this.playing) {
+                        return
+                    } else {
+                        this.playing = true
+                        $('.step2 .confirm').addClass('hidden')
+						$('.step2 .blank').removeClass('hidden')
+                    }
+                    var index = this.choose
+                    if (index == -1) {
+                        return
+                    }
+                    $('.game-playground').addClass('result')
+                    $('.game-playground .self img').addClass('hidden')
+                    $('.game-playground .self .choose-box img:nth-child(' + index + ')').removeClass('hidden')
+                    this.count = 0
+                    this.randomSanta()
+                },
+                randomSanta() {
+                    var self = this
+                    this.count = this.count + 1;
+                    var index = this.count % 3
+                    if (this.count >= 15) {
+						if(self.round == 1){
+							if(self.choose == 1){
+								index = 2
+							}
+							if(self.choose == 2){
+								index = 3
+							}
+							if(self.choose == 3){
+								index = 1
+							}
+						}
+						if(self.round == 2){
+							if(self.choose == 1){
+								index = 3
+							}
+							if(self.choose == 2){
+								index = 1
+							}
+							if(self.choose == 3){
+								index = 2
+							}
+						}
+						if(self.round == 3){
+							if(self.choose == 1){
+								index = 3
+							}
+							if(self.choose == 2){
+								index = 1
+							}
+							if(self.choose == 3){
+								index = 2
+							}
+						}
+                        //index = Math.floor(Math.random() * 3 + 1)
+                        self.santaChoose = index
+                        $('.game-playground .santa img').addClass('hidden')
+                        $('.game-playground .santa .choose-box img:nth-child(' + index + ')')
+                            .removeClass('hidden')
+                        this.dealGameResult()
+                        return
+                    }
+                    setTimeout(function () {
+                        $('.game-playground .santa img').addClass('hidden')
+                        $('.game-playground .santa .choose-box img:nth-child(' + index + ')')
+                            .removeClass('hidden')
+                        self.randomSanta()
+                    }, 100)
+                },
+                dealGameResult(index, santaIndex) {
+                    var index = this.choose
+                    var santaIndex = this.santaChoose
+                    if (index == santaIndex) {
+                        this.resultTitle = '平局'
+                    }
+                    if (index == 1) {
+                        if (santaIndex == 2) {
+                            this.santaScore = this.santaScore + 1
+
+                        }
+                        if (santaIndex == 3) {
+                            this.selfScore = this.selfScore + 1
+                        }
+                    }
+                    if (index == 2) {
+                        if (santaIndex == 3) {
+                            this.santaScore = this.santaScore + 1
+
+                        }
+                        if (santaIndex == 1) {
+                            this.selfScore = this.selfScore + 1
+                        }
+                    }
+                    if (index == 3) {
+                        if (santaIndex == 1) {
+                            this.santaScore = this.santaScore + 1
+                        }
+                        if (santaIndex == 2) {
+                            this.selfScore = this.selfScore + 1
+                        }
+                    }
+
+                    if (this.selfScore == this.santaScore - 2) {
+                        this.resultTitle = '你输了'
+						$('.step2 .blank').addClass('hidden')
+                        $('.step2 .restart').removeClass('hidden')
+                        $('.step2 .game-result .game-result-title').removeClass('hidden')
+                        return
+                    } else if (this.selfScore == this.santaScore + 2) {
+                        this.resultTitle = '你赢啦'
+						$('.step2 .blank').addClass('hidden')
+                        $('.step2 .win').removeClass('hidden')
+                        $('.step2 .game-result .game-result-title').removeClass('hidden')
+                        return
+                    }
+
+                    if (this.round == 3) {
+                        if (this.selfScore == this.santaScore) {
+                            this.resultTitle = '平局'
+							$('.step2 .blank').addClass('hidden')
+                            $('.step2 .restart').removeClass('hidden')
+                        } else if (this.selfScore > this.santaScore) {
+                            this.resultTitle = '你赢啦'
+							$('.step2 .blank').addClass('hidden')
+                            $('.step2 .win').removeClass('hidden')
+                        } else if (this.selfScore < this.santaScore) {
+                            this.resultTitle = '你输了'
+							$('.step2 .blank').addClass('hidden')
+                            $('.step2 .restart').removeClass('hidden')
+                        }
+                        $('.step2 .game-result .game-result-title').removeClass('hidden')
+                        return
+                    } else {
+						$('.step2 .blank').addClass('hidden')
+                        $('.step2 .next').removeClass('hidden')
+                        return
+                    }
+                },
+                next() {
+                    this.playing = false
+                    this.choose = -1
+                    this.santaChoose = -1
+					$('.step2 .blank').removeClass('hidden')
+                    $('.step2 .next').addClass('hidden')
+                    $('.choose-item .choose').removeClass('choose')
+                    $('.game-playground.result').removeClass('result')
+                    $('.game-playground .self img').addClass('hidden')
+                    $('.game-playground .santa img').addClass('hidden')
+                    this.round = this.round + 1
+                },
+                restart() {
+                    this.round = 1
+                    this.playing = false
+                    this.selfScore = 0
+                    this.santaScore = 0
+                    this.choose = -1
+                    this.santaChoose = -1
+                    $('.step2 .game-result .game-result-title').addClass('hidden')
+					$('.step2 .blank').removeClass('hidden')
+                    $('.step2 .restart').addClass('hidden')
+                    $('.choose-item .choose').removeClass('choose')
+                    $('.game-playground.result').removeClass('result')
+                    $('.game-playground .self img').addClass('hidden')
+                    $('.game-playground .santa img').addClass('hidden')
+                },
+                win() {
+                    this.changeStep(3)
+                },
+                open(index, e) {
+                    var self = this
+                    if (!$(e.target).parent().hasClass('opened')) {
+                        $(e.target).parent().addClass('opened')
+                        $(e.target).attr('src', self.gifts[index].url);
+                    }
+                    $('.mask img').attr('src', self.gifts[index].url);
+                    $('.mask div').html(self.gifts[index].text);
+                    $('.mask').show()
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
